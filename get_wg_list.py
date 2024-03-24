@@ -124,15 +124,15 @@ def get_wg_list_from_url(url):
         return pd.DataFrame(offers_list)
     
     except requests.RequestException as e:
-        print(f"An error occurred while requesting {url}: {e}")
+        print(f"[{datetime.now().strftime('%H:%M:%S')}][{url}] An error occurred: {e}")
         return None
     
     except Exception as e:
-        print(f"[{datetime.now().strftime('%H:%M:%S')}] An exception occurred: {e}")
+        print(f"[{datetime.now().strftime('%H:%M:%S')}][{url}] An exception occurred: {e}")
         print(r.url)
         return None
 
-def try_scraping(url, max_retries=3, initial_delay=90):
+def try_scraping(url, max_retries=4, initial_delay=90):
     """Try to scrape the data, but only a few times, to avoid running too long."""
 
     retries = 0
@@ -140,7 +140,7 @@ def try_scraping(url, max_retries=3, initial_delay=90):
     while retries < max_retries:
 
         # Take a break to not trigger the captcha too quick
-        time.sleep(random.uniform(1, 5))
+        time.sleep(random.uniform(2, 10))
 
         # Open one site and get all offers from it
         data_to_append = get_wg_list_from_url(url)
@@ -153,7 +153,7 @@ def try_scraping(url, max_retries=3, initial_delay=90):
         retries += 1
         if retries < max_retries:
             # Take a longer break, because the captcha probably appeared
-            random_delay = random.uniform(delay, delay + 30)
+            random_delay = random.uniform(delay, delay + 60)
             print(f"Retrying in {random_delay} seconds...")
             time.sleep(random_delay)
             delay += 30
@@ -161,7 +161,7 @@ def try_scraping(url, max_retries=3, initial_delay=90):
     return None
 
 # Scraping all sites
-def get_data(date=YESTERDAY, timeout_minutes=20):
+def get_data(date=YESTERDAY, timeout_minutes=30):
     """Get all WG-Gesucht listings for a certain date."""
 
     start_time = datetime.now()
@@ -185,7 +185,7 @@ def get_data(date=YESTERDAY, timeout_minutes=20):
 
         # if scraping a site failed
         if data_to_append is None:
-            print(f"{datetime.now().strftime('%H:%M:%S')}][{i}] Could not scrape: {url}")
+            print(f"{datetime.now().strftime('%H:%M:%S')}][{url}] Could not be scraped.")
             continue
 
         else:
@@ -217,18 +217,20 @@ def get_data(date=YESTERDAY, timeout_minutes=20):
                 if date_reached:
                     # Append data to the existing_data DataFrame
                     existing_data = pd.concat([existing_data, new_rows], ignore_index=True)
-                    print(f"[{datetime.now().strftime('%H:%M:%S')}][{i}] {new_rows.shape[0]} new WG's appended successfully.")
+                    print(f"[{datetime.now().strftime('%H:%M:%S')}][{url}] {new_rows.shape[0]} new WG's appended successfully.")
 
                 # We are not at the desired date yet
                 else:
-                    print(f"[{datetime.now().strftime('%H:%M:%S')}][{i}] {date} not reached yet.")
+                    print(f"[{datetime.now().strftime('%H:%M:%S')}][{url}] {date} not reached yet.")
 
             # There is no more WG's to append
             else:
-                print(f"[{datetime.now().strftime('%H:%M:%S')}][{i}] No WG's to appended.")
+                print(f"[{datetime.now().strftime('%H:%M:%S')}][{url}] No WG's to appended.")
 
     return existing_data
 
+def get_data_lambda(event, context):
+    return get_data()
 
 def main():
     return get_data()
