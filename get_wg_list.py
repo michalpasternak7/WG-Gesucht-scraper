@@ -6,6 +6,7 @@ import pandas as pd
 import time
 import random
 from datetime import datetime, timedelta
+import json
 
 # Constants
 YESTERDAY = (datetime.now().date() - timedelta(days=1)).strftime('%d.%m.%Y')
@@ -133,7 +134,9 @@ def get_wg_list_from_url(url):
         return None
 
 def try_scraping(url, max_retries=3, initial_delay=90):
-    """Try to scrape the data, but only a few times, to avoid running too long."""
+    """Try to scrape the data, but only a few times, to avoid running too long.
+    In case there is a problem with getting the data, it's probably because of the captcha,
+    so there is a delay implemented to wait it out."""
 
     retries = 0
     delay = initial_delay
@@ -161,7 +164,7 @@ def try_scraping(url, max_retries=3, initial_delay=90):
     return None
 
 # Scraping all sites
-def get_data(date=YESTERDAY, timeout_minutes=14):
+def get_data(date=YESTERDAY, timeout_minutes=15):
     """Get all WG-Gesucht listings for a certain date."""
 
     start_time = datetime.now()
@@ -230,7 +233,11 @@ def get_data(date=YESTERDAY, timeout_minutes=14):
     return existing_data
 
 def get_data_lambda(event, context):
+    """Lambda function to be able to run this on AWS Lambda.
+    Does the same as get_data(), but the output is turned into a JSON (not a JSON string)."""
     data_df = get_data()
     data_json = data_df.to_json(orient='records')
+    data_json = json.loads(data_json)
+    print(data_json)
     print(f"Returned json based on df of shape:{data_df.shape}")
     return data_json

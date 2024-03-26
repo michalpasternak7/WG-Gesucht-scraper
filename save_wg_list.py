@@ -2,9 +2,11 @@
 import gspread
 
 def save_data_lambda(event, context):
-    
+    """Saves the data it get's from get_wg_list to a Google Spreadsheet."""
+
+    # Transform the output of get_wg_list to something we can feed into the Google Spreadsheet
     append_list = []
-    for i in event:
+    for i in event['responsePayload']:
         append_list.append([i['wg_id'],
                             i['href'],
                             i['size_and_genders'],
@@ -13,7 +15,7 @@ def save_data_lambda(event, context):
                             i['sqr_m'],
                             i['city_part'],
                             i['available_from'],
-                            i['available_to'],
+                            i['available_to']
                             ])
 
     # Connect to Google Spreadsheet
