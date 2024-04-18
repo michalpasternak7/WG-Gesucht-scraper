@@ -56,6 +56,8 @@ This script retrieves data using the `get_data()` function from `get_wg_list.py`
 2. Run the script locally.
 
 
+
+
 ## Setting Up Google Sheets for [gspread](https://docs.gspread.org/en/v6.0.0/)
 
 ### Step 1: Create a New Google Cloud Project
@@ -83,6 +85,8 @@ This script retrieves data using the `get_data()` function from `get_wg_list.py`
 2. Click on **Enable APIs and Services**.
 3. Search for **Google Drive API** and **Google Sheets API**.
 4. Enable both APIs.
+
+
 
 
 ## AWS Lambda Deployment
