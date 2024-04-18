@@ -55,7 +55,7 @@ This script retrieves data using the `get_data()` function from `get_wg_list.py`
 2. Run the script locally.
 
 
-## Setting Up Google Sheets for gspread
+## Setting Up Google Sheets for [gspread](https://docs.gspread.org/en/v6.0.0/)
 
 ### Step 1: Create a New Google Cloud Project
 1. Navigate to the [Google Cloud Platform](https://console.cloud.google.com/) and create a new project.
@@ -74,7 +74,7 @@ This script retrieves data using the `get_data()` function from `get_wg_list.py`
 ### Step 4: Generate and Download JSON Key
 1. In the **Credentials** page, click on the email of the Service Account you created.
 2. Navigate to the **Keys** tab and click on **Add Key**.
-3. Select **JSON** as the key type. This will download a JSON file containing the necessary keys.
+3. Select **JSON** as the key type. This will download a file containing all the necessary keys for your code to communicate with the Service Account.
 4. Move this downloaded file into your project folder and rename it to `service_account.json`.
 
 ### Step 5: Enable Google APIs
@@ -86,9 +86,9 @@ This script retrieves data using the `get_data()` function from `get_wg_list.py`
 
 ## AWS Lambda Deployment
 
-To deploy the functions on AWS Lambda:
+### Step 1: Prerequisites
 
-1. Install the dependencies in a folder. Navigate to the folder containing your script and run the following command to install the dependencies in a folder named `dependencies`:
+- Install the dependencies in a folder. Navigate to the folder containing your script and run the following command to install the dependencies in a folder named `dependencies`:
 
 ```bash
 pip install --target dependencies requests
@@ -96,7 +96,7 @@ pip install --target dependencies requests
 
 (**Note:** for dependencies that take up a lot of space, like pandas, it's better to not include them and add them later on from the layers.)
 
-2. Zip the script with its dependencies. You can use the following command in your terminal or command prompt:
+- Zip the script with its dependencies. You can use the following command in your terminal or command prompt:
 ```bash
 zip -r your_lambda_function.zip your_script.py your_dependencies_folder/
 ```
@@ -104,44 +104,47 @@ Replace `your_script.py` with the name of your Python script and `your_dependenc
 
 (when you zip the dependencies you can include the `service_account.json`)
 
-3. Create a new Lambda function in the AWS Management Console.
-    - Go to [AWS Lambda Console](https://console.aws.amazon.com/lambda/).
-    - Click on "Create function".
-    - Choose "Author from scratch".
-    - Configure the function:
-        - **Name**: Enter a name for your Lambda function.
-        - **Runtime**: Choose "Python 3.11".
-    - Click on "Create function".
+### Step 2: Create Lambda Function
+- Go to [AWS Lambda Console](https://console.aws.amazon.com/lambda/).
+- Click on "**Create function**".
+- Choose "**Author from scratch**".
+- Configure the function:
+    - **Name**: Enter a name for your Lambda function.
+    - **Runtime**: Choose "**Python 3.11**".
+- Click on "Create function".
 
-4. Add Pandas Layer (if necessary)
-    - Click on "Layers".
-    - Add pandas by searching for "AWSSDKPandas-Python311" (that's why we choose "Python 3.11" earlier).
+### Step 3: Add Pandas Layer (if necessary)
+- Navigate to Layers and search for "**AWSSDKPandas-Python311**" (that's why we choose "Python 3.11" earlier).
+- Add this layer to your function.
 
-4. Upload the ZIP file.
-    - Click on "Upload from" > ".zip file" and upload your `your_lambda_function.zip`.
-    - Now you should be able to see the code.
+### Step 4: Upload ZIP File
+- Click on "**Upload from**" > "**.zip file**" and upload your `your_lambda_function.zip`.
+- Now you should be able to see the code.
+- In Runtime settings, set the Handler to script_name.function_name (replace script_name with your actual script's name and function_name with the relevant function).
 
-5. In Runtime settings, set the Handler to script_name.function_name (replace script_name with your actual script's name and function_name with the relevant function).
+### Step 5: Configure Timeout & Memory
+- Go to `Configuration` > `Timeout` and edit the Timeout to a suitable value, e.g., `30 seconds`.
+(`get_wg_list.py` works best with `15 min`, for`save_wg_list.py` `5 min` would definitely be enough)
 
-6. Go to `Configuration` > `Timeout` and edit the Timeout to a suitable value, e.g., `30 seconds`.
-    (`get_wg_list.py` works best with `15 min`, for`save_wg_list.py` `5 min` would definitely be enough)
+### Step 6: Save & Test
+- Save your Lambda function settings.
+- Test the function to ensure proper execution.
 
-7. Save and test the Lambda function.
+**For the `get_data_lambda` function:**
 
-For the `get_data_lambda` function:
+### Step 7: Configure Destination
+Open your `get_data_lambda` function and configure a destination to trigger the `save_data_lambda` function:
+- Select "**Asynchronous invocation**".
+- For "On Success", choose "**Lambda function**" as the destination type.
+- Select the `save_data_lambda` function from the dropdown, which is responsible for saving the data.
 
-8. Open your `get_data_lambda` function and configure a destination to trigger the `save_data_lambda` function:
-    - Select "Asynchronous invocation".
-    - For "On Success", choose "Lambda function" as the destination type.
-    - Select the `save_data_lambda` function from the dropdown, which is responsible for saving the data.
+### Step 8: Add Trigger
+- Click on "**Add trigger**" in the designer section of your Lambda function.
+- Choose "**EventBridge**" from the trigger configuration options.
+- Configure the trigger settings by creating a new rule or selecting an existing one.
+- Save the trigger configuration.
 
-9. Add a trigger to your Lambda function:
-    - Click on "Add trigger" in the designer section of your Lambda function.
-    - Choose "EventBridge" from the trigger configuration options.
-    - Configure the trigger settings by creating a new rule or selecting an existing one.
-    - Save the trigger configuration.
-
-10. Monitor your Lambda function's execution:
-    - Go to "Monitor" in the Lambda console menu.
-    - Click on "View CloudWatch logs".
-    - Check the CloudWatch logs to verify if the Lambda function runs correctly and to troubleshoot any issues.
+### Step 9: Monitor Execution
+- Go to "**Monitor**" in the Lambda console menu.
+- Click on "**View CloudWatch logs**".
+- Check the CloudWatch logs to verify if the Lambda function runs correctly and to troubleshoot any issues.
