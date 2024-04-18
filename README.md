@@ -20,9 +20,11 @@ The '**get_data_lambda()**' function is designed for deployment on AWS Lambda. I
 To deploy this function on AWS Lambda:
 
 1. Zip the script with its dependencies. You can use the following command in your terminal or command prompt:
-``bash
+```bash
 zip -r your_lambda_function.zip your_script.py your_dependencies_folder/
+```
 Replace your_script.py with the name of your Python script and your_dependencies_folder/ with the folder containing your dependencies.
+
 2. Create a new Lambda function in the AWS Management Console.
 3. Upload the ZIP file.
 4. Set the handler to get_wg_list.get_data_lambda.
