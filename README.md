@@ -14,17 +14,17 @@ This script scrapes WG-Gesucht listings and returns the data as a JSON object.
 - `pandas`: For data manipulation
 
 ### Usage:
-To use the script, you can call the `get_data()` function without any arguments to scrape WG-Gesucht listings for yesterday's date by default.
+- To use the script, you can call the `get_data()` function without any arguments to scrape WG-Gesucht listings for yesterday's date by default.
 ```python
 data = get_data()
 ```
 
-You can also specify a date and timeout in minutes:
+- You can also specify a date and timeout in minutes:
 ```python
 data = get_data(date='dd.mm.yyyy', timeout_minutes=15)
 ```
 
-The `get_data_lambda()` function is designed for deployment on AWS Lambda. It returns the scraped data as a JSON object. It's based on `get_data()` with the default values of `date=YESTERDAY, timeout_minutes=15`.
+- The `get_data_lambda()` function is designed for deployment on AWS Lambda. It returns the scraped data as a JSON object. It's based on `get_data()` with the default values of `date=YESTERDAY, timeout_minutes=15`.
 
 
 
@@ -36,20 +36,25 @@ This script is designed to be deployed on AWS Lambda and saves the event data re
 - `gspread`: For Google Sheets API
 
 ### Usage:
-Ensure you have `service_account.json` in the same directory for authentication.
+- Ensure you have `service_account.json` in the same directory for authentication.
+- Deploy the script as an AWS Lambda function.
 
 
+## save_wg_list_local.py
+### Overview:
+This script retrieves data using the `get_data()` function from `get_wg_list.py` and saves it to a Google Spreadsheet. This script is not meant to be deployed on AWS Lambda.
 
+### Dependencies:
+- `json`: Standard Python library
+- `gspread`: For Google Sheets API
+- `get_wg_list`: Custom module to fetch data
 
+### Usage:
+- Ensure you have service_account.json in the same directory for authentication.
+- Run the script locally.
 
-
-
-
-AWS Lambda Deployment
-The `get_data_lambda()` function is designed for deployment on AWS Lambda. It returns the scraped data as a JSON object.
 
 # TODO:
-## add save wg
 ## explain google sheets
 
 ## AWS Lambda Deployment
@@ -89,7 +94,7 @@ Replace `your_script.py` with the name of your Python script and `your_dependenc
     - Click on "Upload from" > ".zip file" and upload your `your_lambda_function.zip`.
     - Now you should be able to see the code.
 
-5. In Runtime settings, set the Handler to script_name.function_name (replace script_name with your actual script's name).
+5. In Runtime settings, set the Handler to script_name.function_name (replace script_name with your actual script's name and function_name with the relevant function).
 
 6. Go to `Configuration` > `Timeout` and edit the Timeout to a suitable value, e.g., `30 seconds`.
     (`get_wg_list.py` works best with `15 min`, for`save_wg_list.py` `5 min` would definitely be enough)
