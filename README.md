@@ -17,13 +17,21 @@ data = get_data(date='dd.mm.yyyy', timeout_minutes=15)
 AWS Lambda Deployment
 The '**get_data_lambda()**' function is designed for deployment on AWS Lambda. It returns the scraped data as a JSON object.
 
+## AWS Lambda
+
 To deploy this function on AWS Lambda:
 
-1. Zip the script with its dependencies. You can use the following command in your terminal or command prompt:
+1. Install the dependencies in a folder. Navigate to the folder containing your script and run the following command to install the dependencies in a folder named `dependencies`:
+
+```bash
+pip install --target dependencies requests
+```
+
+2. Zip the script with its dependencies. You can use the following command in your terminal or command prompt:
 ```bash
 zip -r your_lambda_function.zip your_script.py your_dependencies_folder/
 ```
-Replace your_script.py with the name of your Python script and your_dependencies_folder/ with the folder containing your dependencies.
+Replace '**your_script.py**' with the name of your Python script and '**your_dependencies_folder/**' with the folder containing your dependencies.
 
 2. Create a new Lambda function in the AWS Management Console.
 3. Upload the ZIP file.
