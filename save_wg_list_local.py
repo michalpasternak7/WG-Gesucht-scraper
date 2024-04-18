@@ -27,5 +27,4 @@ def save_data(data_df):
 data_df = get_data()
 
 # Save the data to Google Spreadsheet
-save_data(data_df)
-    
+save_data(data_df) 

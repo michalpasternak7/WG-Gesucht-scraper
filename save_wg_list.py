@@ -29,5 +29,3 @@ def save_data_lambda(event, context):
     worksheet.append_rows(append_list, value_input_option='RAW')
     
     print("Data appended successfully.")
-    
-    
