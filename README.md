@@ -26,6 +26,7 @@ data = get_data(date='dd.mm.yyyy', timeout_minutes=15)
 
 - The `get_data_lambda()` function is designed for deployment on AWS Lambda. It returns the scraped data as a JSON object. It's based on `get_data()` with the default values of `date=YESTERDAY, timeout_minutes=15`.
 
+1. Deploy the script as an AWS Lambda function.
 
 
 ## save_wg_list.py
@@ -36,8 +37,8 @@ This script is designed to be deployed on AWS Lambda and saves the event data re
 - `gspread`: For Google Sheets API
 
 ### Usage:
-- Ensure you have `service_account.json` in the same directory for authentication.
-- Deploy the script as an AWS Lambda function.
+1. Ensure you have `service_account.json` in the same directory for authentication.
+2. Deploy the script as an AWS Lambda function.
 
 
 ## save_wg_list_local.py
@@ -50,12 +51,38 @@ This script retrieves data using the `get_data()` function from `get_wg_list.py`
 - `get_wg_list`: Custom module to fetch data
 
 ### Usage:
-- Ensure you have service_account.json in the same directory for authentication.
-- Run the script locally.
+1. Ensure you have service_account.json in the same directory for authentication.
+2. Run the script locally.
 
 
-# TODO:
-## explain google sheets
+## Setting Up Google Sheets for gspread
+
+### Step 1: Create a New Google Cloud Project
+1. Navigate to the [Google Cloud Platform](https://console.cloud.google.com/) and create a new project.
+
+### Step 2: Create Service Account Credentials
+1. Go to the **APIs & Services** tab.
+2. Click on **Credentials** and then **Create Credentials**.
+3. Select **Service Account**.
+4. Once the Service Account credentials are created, copy the email associated with it.
+
+### Step 3: Share Google Spreadsheet with Service Account
+1. Open your Google Spreadsheet.
+2. Click on **Share** in the top-right corner.
+3. Paste the copied Service Account email and set its permission to **Editor** or **Owner**.
+
+### Step 4: Generate and Download JSON Key
+1. In the **Credentials** page, click on the email of the Service Account you created.
+2. Navigate to the **Keys** tab and click on **Add Key**.
+3. Select **JSON** as the key type. This will download a JSON file containing the necessary keys.
+4. Move this downloaded file into your project folder and rename it to `service_account.json`.
+
+### Step 5: Enable Google APIs
+1. Go back to the **APIs & Services** dashboard.
+2. Click on **Enable APIs and Services**.
+3. Search for **Google Drive API** and **Google Sheets API**.
+4. Enable both APIs.
+
 
 ## AWS Lambda Deployment
 
