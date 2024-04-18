@@ -1,9 +1,19 @@
 # WG-Gesucht-scraper
 
 ## Overview
-This Python script is designed to scrape WG-Gesucht, a popular platform for shared housing listings, to gather information about available rooms or apartments in Berlin. The script utilizes BeautifulSoup for web scraping, pandas for data manipulation, and requests for HTTP requests.
+This collection of Python scripts is designed to scrape WG-Gesucht, a popular platform for shared housing listings, to gather information about available rooms or apartments in Berlin. The `get_wg_list.py` script uses BeautifulSoup for web scraping, pandas for data manipulation, and requests for HTTP requests. The `save_wg_list.py` and `save_wg_list_local.py` scripts save the gathered data to a Google Spreadsheet using the gspread library.
 
-## Usage
+
+## get_wg_list.py
+### Overview:
+This script scrapes WG-Gesucht listings and returns the data as a JSON object.
+
+### Dependencies:
+- `requests`: For HTTP requests
+- `BeautifulSoup`: For web scraping
+- `pandas`: For data manipulation
+
+### Usage:
 To use the script, you can call the `get_data()` function without any arguments to scrape WG-Gesucht listings for yesterday's date by default.
 ```python
 data = get_data()
@@ -13,6 +23,27 @@ You can also specify a date and timeout in minutes:
 ```python
 data = get_data(date='dd.mm.yyyy', timeout_minutes=15)
 ```
+
+The `get_data_lambda()` function is designed for deployment on AWS Lambda. It returns the scraped data as a JSON object. It's based on `get_data()` with the default values of `date=YESTERDAY, timeout_minutes=15`.
+
+
+
+## save_wg_list.py
+### Overview:
+This script is designed to be deployed on AWS Lambda and saves the event data received from `get_wg_list`'s `get_data_lambda` function to a Google Spreadsheet.
+
+### Dependencies:
+- `gspread`: For Google Sheets API
+
+### Usage:
+Ensure you have `service_account.json` in the same directory for authentication.
+
+
+
+
+
+
+
 
 AWS Lambda Deployment
 The `get_data_lambda()` function is designed for deployment on AWS Lambda. It returns the scraped data as a JSON object.
@@ -31,6 +62,8 @@ To deploy the functions on AWS Lambda:
 pip install --target dependencies requests
 ```
 
+(**Note:** for dependencies that take up a lot of space, like pandas, it's better to not include them and add them later on from the layers.)
+
 2. Zip the script with its dependencies. You can use the following command in your terminal or command prompt:
 ```bash
 zip -r your_lambda_function.zip your_script.py your_dependencies_folder/
@@ -47,8 +80,10 @@ Replace `your_script.py` with the name of your Python script and `your_dependenc
         - **Name**: Enter a name for your Lambda function.
         - **Runtime**: Choose "Python 3.11".
     - Click on "Create function".
+
+4. Add Pandas Layer (if necessary)
     - Click on "Layers".
-    - Add pandas by searching for "AWSSDKPandas-Python311".
+    - Add pandas by searching for "AWSSDKPandas-Python311" (that's why we choose "Python 3.11" earlier).
 
 4. Upload the ZIP file.
     - Click on "Upload from" > ".zip file" and upload your `your_lambda_function.zip`.
