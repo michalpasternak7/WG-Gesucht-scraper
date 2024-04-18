@@ -3,17 +3,18 @@
 ## Overview
 This collection of Python scripts is designed to scrape WG-Gesucht, a popular platform for shared housing listings, to gather information about available rooms or apartments in Berlin. The `get_wg_list.py` script uses BeautifulSoup for web scraping, pandas for data manipulation, and requests for HTTP requests. The `save_wg_list.py` and `save_wg_list_local.py` scripts save the gathered data to a Google Spreadsheet using the gspread library.
 
+## Scripts
 
-## get_wg_list.py
-### Overview:
+### 1. get_wg_list.py
+#### Overview:
 This script scrapes WG-Gesucht listings and returns the data as a JSON object.
 
-### Dependencies:
+#### Dependencies:
 - `requests`: For HTTP requests
 - `BeautifulSoup`: For web scraping
 - `pandas`: For data manipulation
 
-### Usage:
+#### Usage:
 - To use the script, you can call the `get_data()` function without any arguments to scrape WG-Gesucht listings for yesterday's date by default.
 ```python
 data = get_data()
@@ -29,28 +30,28 @@ data = get_data(date='dd.mm.yyyy', timeout_minutes=15)
 1. Deploy the script as an AWS Lambda function.
 
 
-## save_wg_list.py
-### Overview:
+### 2.  save_wg_list.py
+#### Overview:
 This script is designed to be deployed on AWS Lambda and saves the event data received from `get_wg_list`'s `get_data_lambda` function to a Google Spreadsheet.
 
-### Dependencies:
+#### Dependencies:
 - `gspread`: For Google Sheets API
 
-### Usage:
+#### Usage:
 1. Ensure you have `service_account.json` in the same directory for authentication.
 2. Deploy the script as an AWS Lambda function.
 
 
-## save_wg_list_local.py
-### Overview:
+### 3. save_wg_list_local.py
+#### Overview:
 This script retrieves data using the `get_data()` function from `get_wg_list.py` and saves it to a Google Spreadsheet. This script is not meant to be deployed on AWS Lambda.
 
-### Dependencies:
+#### Dependencies:
 - `json`: Standard Python library
 - `gspread`: For Google Sheets API
 - `get_wg_list`: Custom module to fetch data
 
-### Usage:
+#### Usage:
 1. Ensure you have service_account.json in the same directory for authentication.
 2. Run the script locally.
 
