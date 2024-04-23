@@ -158,7 +158,7 @@ Open your `get_data_lambda` function and configure a destination to trigger the 
 ## TODO:
 - [x] list data
     - [x] scraping logic
-    - [ ] cloud implementation
+    - [x] cloud implementation (AWS)
 - [ ] offer details
     - [x] scraping logic
-    - [ ] cloud implementation
+    - [ ] cloud implementation (too big for AWS?)
