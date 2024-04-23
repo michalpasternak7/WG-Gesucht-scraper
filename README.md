@@ -153,3 +153,10 @@ Open your `get_data_lambda` function and configure a destination to trigger the 
 - Go to "**Monitor**" in the Lambda console menu.
 - Click on "**View CloudWatch logs**".
 - Check the CloudWatch logs to verify if the Lambda function runs correctly and to troubleshoot any issues.
+
+
+## TODO:
+- [x] list data
+- [ ] offer details
+    - [x] scraping logic
+    - [ ] cloud implementation
