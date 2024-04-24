@@ -162,3 +162,8 @@ Open your `get_data_lambda` function and configure a destination to trigger the 
 - [ ] offer details
     - [x] scraping logic
     - [ ] cloud implementation (too big for AWS?)
+     
+## Data availability
+The data is collected since 20.03.2024 daily. The offers are scrapped each night arround 3AM.
+If you would like to use the data, I'm happy to share it. You can contact me via the contact data in my profile.
+
