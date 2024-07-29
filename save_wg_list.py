@@ -8,9 +8,9 @@ import io
 # Set up S3 client
 s3_client = boto3.client('s3')
 
-# S3 bucket and file name
-S3_BUCKET = 'wg-gesucht-data-bucket'
-S3_FILE_NAME = 'wg-gesucht_list-list_data.csv'
+# S3 bucket and file name from environment variables
+S3_BUCKET = os.environ['S3_BUCKET']
+S3_FILE_NAME = os.environ['S3_FILE_NAME']
 
 def read_existing_csv():
     try:
@@ -74,4 +74,3 @@ def save_data_lambda(event, context):
     save_data_to_s3(append_list)
     
     print("Data appended successfully to S3.")
-    
